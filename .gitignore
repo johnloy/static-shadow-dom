@@ -1,0 +1,11 @@
+## system files
+.DS_Store
+
+## code coverage folders
+coverage/
+
+## npm
+/node_modules/
+/packages/*/node_modules/
+npm-debug.log
+yarn-error.log
