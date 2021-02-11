@@ -28,6 +28,7 @@ module.exports = {
   ],
   rules: {
     'prettier/prettier': 'error',
+    'jsdoc/require-jsdoc': 0,
   },
   settings: {
     node: {
