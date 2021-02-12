@@ -1,22 +1,94 @@
 # static-wc
 
-Render the shadowRoot of custom elements to static HTML
+Render the shadowRoot of custom elements in an HTML string or [hast AST](https://github.com/syntax-tree/hast) to include a [declarative shadow DOM](https://github.com/mfreed7/declarative-shadow-dom/blob/master/README.md) `<template>` node for use in static site generation (SSG) and server-side rendering (SSR).
 
-## Summary
+Learn more about Declarative Shadow DOM:
+- [web.dev blog post](https://web.dev/declarative-shadow-dom/)
+- [Explainer](https://github.com/mfreed7/declarative-shadow-dom/blob/master/README.md)
+- [WhatWG discussion](https://github.com/whatwg/dom/issues/831)
+
+## Examples
+
+```javascript
+// my-component.js
+class MyComponentElement extends HTMLElement {
+  constructor() {
+    super()
+    this.attachShadow({ mode: 'open' })
+  }
+
+  connectedCallback() {
+    this.shadowRoot.innerHTML = `
+      <p>Hello...</p>
+      <slot></slot>
+    `
+  }
+}
+
+customElements.define('my-component', MyComponentElement)
+```
+
+```javascript
+// A node esm module (cjs also supported) in your build script...
+import { staticWc } from '@drstrangediv/static-wc'
+
+const htmlStr = `
+  <my-component>
+   <p>Hello!</p> 
+  </my-component>
+`
+
+// Relative to `cwd` option
+const scripts = ['./src/components/my-component.js']
+
+;(async () => {
+  const { dom, html, ast } = staticWc(htmlStr, scripts, {
+    cwd: process.cwd(), // /Users/me/projects/my-website
+    cleanupDom: false, // Keep the jsdom.JSDOM for reuse
+  })
+
+  console.log(dom)
+
+  console.log(html)
+  /*
+    Prints:
+    -------
+    <my-component>
+      <template shadowroot="open">
+        <p>Hello...</p>
+        <slot></slot> 
+      </template>
+      <p>...world!</p> 
+    </my-component>
+  */
+
+ console.log(ast)
+
+})()
+```
 
 ## Install
 
+```sh
+npm i -D @drstrangediv/static-wc
+```
+
 ## Usage
 
+### Use with LitElement
+### Reuse the jsdom.JSDOM instance for rendering multiple inputs
+
 ## API
+
 <!-- api -->
 ### Functions
 
 <dl>
 <dt><a href="#staticWc">staticWc(htmlSource, scriptFiles, options)</a> ⇒ <code><a href="#JSDOM">JSDOM</a></code></dt>
-<dd><p>Render web components within a string of HTML or hast AST tree
-for the purposes of static site generation (SSG) or server-side
-rendering (SSR) by injecting serialized declarative shadow roots.</p>
+<dd><p>Render the shadowRoot of custom elements in an HTML string or <a href="https://github.com/syntax-tree/hast">hast
+AST</a> to include a <a href="https://github.com/mfreed7/declarative-shadow-dom/blob/master/README.md">declarative shadow
+DOM</a> <code>&lt;template&gt;</code> node
+for use in static site generation (SSG) and server-side rendering (SSR).</p>
 </dd>
 </dl>
 
@@ -30,12 +102,14 @@ rendering (SSR) by injecting serialized declarative shadow roots.</p>
 <a name="staticWc"></a>
 
 ### staticWc(htmlSource, scriptFiles, options) ⇒ [<code>JSDOM</code>](#JSDOM)
-Render web components within a string of HTML or hast AST tree
-for the purposes of static site generation (SSG) or server-side
-rendering (SSR) by injecting serialized declarative shadow roots.
+Render the shadowRoot of custom elements in an HTML string or [hast
+AST](https://github.com/syntax-tree/hast) to include a [declarative shadow
+DOM](https://github.com/mfreed7/declarative-shadow-dom/blob/master/README.md) `<template>` node
+for use in static site generation (SSG) and server-side rendering (SSR).
 
 **Kind**: global function  
-**Returns**: [<code>JSDOM</code>](#JSDOM) - - The jsdom.JSDOM instance used for rendering, for potential reuse  
+**Returns**: [<code>JSDOM</code>](#JSDOM) - The [jsdom.JSDOM](https://github.com/jsdom/jsdom#basic-usage) instance used for rendering, for
+  potential reuse  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -55,7 +129,6 @@ Remove browser globals added to the node environment
 **Kind**: global typedef  
 
 <!-- /api -->
-
 
 ## Contributing
 
