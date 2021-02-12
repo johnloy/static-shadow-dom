@@ -1,6 +1,6 @@
-const { staticWc } = require('@drstrangediv/static-wc')
+const { hydrateWc } = require('@drstrangediv/hydrate-wc')
 
-const html = `
+const htmlStr = `
   <web-component foo="bar">
     <p>hey</p>
   </web-component>
@@ -11,5 +11,6 @@ const html = `
 const scripts = ['./web-components/web-component.js', './web-components/nested-component.js']
 
 ;(async () => {
-  await staticWc(html, scripts, { cwd: __dirname })
+  const { html, dom } = await hydrateWc(htmlStr, scripts, { cwd: __dirname })
+  console.log(html)
 })()

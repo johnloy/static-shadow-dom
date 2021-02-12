@@ -1,3 +1,3 @@
-import { staticWc } from './lib/staticWc.js'
+import { hydrateWc } from './lib/hydrateWc.js'
 
-export { staticWc }
+export { hydrateWc }

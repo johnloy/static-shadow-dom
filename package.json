@@ -1,7 +1,7 @@
 {
-  "name": "@drstrangediv/static-wc",
+  "name": "@drstrangediv/hydrate-wc",
   "version": "1.0.0",
-  "description": "Render the shadowRoot of custom elements to static HTML",
+  "description": "Render the declarative shadow DOM to custom elements in a fragment of HTML",
   "license": "MIT",
   "main": "index.js",
   "exports": {
@@ -52,6 +52,7 @@
     "husky": "^5.0.9",
     "jsdoc-md": "^9.1.1",
     "jsdoc-to-markdown": "^6.0.1",
+    "jsdoc-ts-utils": "^1.1.2",
     "jsdoc-tsimport-plugin": "^1.0.4",
     "lint-staged": "^10.5.4",
     "prettier-plugin-jsdoc": "^0.3.9",
