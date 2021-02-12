@@ -1,4 +1,4 @@
-# static-wc
+# hydrate-wc
 
 Render the shadowRoot of custom elements in an HTML string or [hast AST](https://github.com/syntax-tree/hast) to include a [declarative shadow DOM](https://github.com/mfreed7/declarative-shadow-dom/blob/master/README.md) `<template>` node for use in static site generation (SSG) and server-side rendering (SSR).
 
