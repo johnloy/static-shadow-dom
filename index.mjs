@@ -1,3 +1,3 @@
-import { hydrateWc } from './lib/hydrateWc.js'
+import { staticShadow } from './lib/index.js'
 
-export { hydrateWc }
+export { staticShadow }

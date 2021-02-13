@@ -1,5 +1,5 @@
 {
-  "name": "@drstrangediv/hydrate-wc",
+  "name": "@drstrangediv/static-shadow",
   "version": "1.0.0",
   "description": "Render the declarative shadow DOM to custom elements in a fragment of HTML",
   "license": "MIT",

@@ -1,5 +1,5 @@
-const { hydrateWc } = require('./lib/hydrateWc')
+const { staticShadow } = require('./lib/index')
 
 module.exports = {
-  hydrateWc,
+  staticShadow,
 }
