@@ -1,5 +1,5 @@
 {
-  "name": "@drstrangediv/static-shadow",
+  "name": "@johnloy/static-shadow-dom",
   "version": "1.0.0",
   "description": "Render the declarative shadow DOM to custom elements in a fragment of HTML",
   "license": "MIT",
@@ -25,21 +25,26 @@
     "echo": "echo $1"
   },
   "dependencies": {
-    "@node-loader/core": "^1.0.3",
+    "@node-loader/core": "johnloy/node-loader-core#bugfix/config-env-var-path",
     "@node-loader/import-maps": "^1.0.3",
     "@rollup/plugin-node-resolve": "^11.1.1",
+    "app-root-path": "^3.0.0",
     "es-module-lexer": "^0.3.26",
     "globals": "^12.4.0",
+    "hast-util-to-html": "^7.1.2",
     "is-potential-custom-element-name": "^1.0.0",
     "jsdoc": "^3.6.6",
+    "jsdoc-plugin-typescript": "^2.0.6",
     "jsdom": "^16.4.0",
     "lit-element": "^2.4.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.2.1",
     "qsa-observer": "^1.1.6",
     "rehype": "^11.0.0",
+    "rehype-stringify": "^8.0.0",
     "shelljs": "^0.8.4",
-    "strip-comments": "^2.0.1"
+    "strip-comments": "^2.0.1",
+    "unist-util-is": "^4.0.4"
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^4.15.0",

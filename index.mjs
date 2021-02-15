@@ -1,3 +1,3 @@
-import { staticShadow } from './lib/index.js'
+import StaticShadowDom from './lib/StaticShadowDom.js'
 
-export { staticShadow }
+export { StaticShadowDom }

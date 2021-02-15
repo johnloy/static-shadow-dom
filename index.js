@@ -1,5 +1,3 @@
-const { staticShadow } = require('./lib/index')
+const StaticShadowDom = require('./lib/StaticShadowDom')
 
-module.exports = {
-  staticShadow,
-}
+module.exports = { StaticShadowDom }

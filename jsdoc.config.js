@@ -1,3 +1,6 @@
 module.exports = {
-  plugins: ['node_modules/jsdoc-tsimport-plugin/index.js'],
+  plugins: ['jsdoc-plugin-typescript'],
+  typescript: {
+    moduleRoot: 'lib',
+  },
 }

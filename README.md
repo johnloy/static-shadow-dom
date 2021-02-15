@@ -1,6 +1,6 @@
-# hydrate-wc
+# static-shadow-dom
 
-Transform/render custom elements in an HTML string or [hast AST](https://github.com/syntax-tree/hast) to include a [declarative shadow DOM](https://github.com/mfreed7/declarative-shadow-dom/blob/master/README.md) `<template>` node for use in static site generation (SSG) and server-side rendering (SSR).
+Transform custom elements in an HTML string or [hast AST](https://github.com/syntax-tree/hast) to include a [declarative shadow DOM](https://github.com/mfreed7/declarative-shadow-dom/blob/master/README.md) `<template>` first child node, for custom element hydration when using static site generation (SSG) and server-side rendering (SSR).
 
 Learn more about Declarative Shadow DOM:
 
@@ -19,6 +19,7 @@ class MyComponentElement extends HTMLElement {
   }
 
   connectedCallback() {
+    // Uh-oh, I won't be in the initial HTML payload!
     this.shadowRoot.innerHTML = `
       <p>Hello...</p>
       <slot></slot>
@@ -31,7 +32,7 @@ customElements.define('my-component', MyComponentElement)
 
 ```javascript
 // A node esm module (cjs also supported) in your build script...
-import { hydrateWc } from '@drstrangediv/static-wc'
+import { StaticShadowDom } from '@johnloy/static-shadow-dom'
 
 const htmlStr = `
   <my-component>
@@ -43,12 +44,23 @@ const htmlStr = `
 const scripts = ['./src/components/my-component.js']
 
 ;(async () => {
-  const { dom, html, ast } = await hydrateWc(htmlStr, scripts, {
-    cwd: process.cwd(), // /Users/me/projects/my-website
-    cleanupDom: false, // Keep the jsdom.JSDOM for reuse
-  })
+  const renderer = new StaticShadowDom()
 
-  console.log(dom)
+  const {
+    // string
+    html,
+    // hast AST object
+    ast,
+    // jsdom.JSDOM object
+    dom,
+  } = await renderer.render(htmlStr, scripts, {
+    // Example: /Users/me/projects/my-website
+    cwd: process.cwd(),
+
+    // Keep the renderer child process and its jsdom alive
+    // for subsequent renders.
+    cleanupDom: false,
+  })
 
   console.log(html)
   /*
@@ -64,13 +76,21 @@ const scripts = ['./src/components/my-component.js']
   */
 
   console.log(ast)
+  /*
+    Prints:
+    -------
+    {
+      type: 'root',
+      children: [...]
+    }
+  */
 })()
 ```
 
 ## Install
 
 ```sh
-npm i -D @drstrangediv/static-wc
+npm i -D @johnloy/static-shadow-dom
 ```
 
 ## Usage
@@ -82,93 +102,105 @@ npm i -D @drstrangediv/static-wc
 ## API
 
 <!-- api -->
-
-### Functions
+### Classes
 
 <dl>
-<dt><a href="#hydrateWc">hydrateWc(htmlSource, scriptFiles, [userOptions])</a> ⇒ <code>Promise.&lt;Partial.&lt;HydrationResult&gt;&gt;</code></dt>
-<dd><p>Render the shadowRoot of custom elements in an HTML string or <a href="https://github.com/syntax-tree/hast">hast
-AST</a> to include a <a href="https://github.com/mfreed7/declarative-shadow-dom/blob/master/README.md">declarative shadow
-DOM</a> <code>&lt;template&gt;</code> node
-for use in static site generation (SSG) and server-side rendering (SSR).</p>
+<dt><a href="#StaticShadowDom">StaticShadowDom</a></dt>
+<dd><p>Creates a child process used for rendering</p>
 </dd>
 </dl>
 
 ### Typedefs
 
 <dl>
+<dt><a href="#Options">Options</a> : <code>Object</code></dt>
+<dd><p><a href="#StaticShadowDom+render">StaticShadowDom#render()</a> options</p>
+</dd>
+<dt><a href="#RenderResult">RenderResult</a> : <code>Object</code></dt>
+<dd><p>An object containing data about the hydration result, including
+  the HTML string</p>
+</dd>
 <dt><a href="#JSDOM">JSDOM</a> : <code>module:jsdom~JSDOM</code></dt>
 <dd></dd>
-<dt><a href="#Options">Options</a> : <code>Object</code></dt>
-<dd><p><a href="#hydrateWc">hydrateWc()</a> options</p>
-</dd>
 <dt><a href="#cleanup">cleanup</a> ⇒ <code>void</code></dt>
 <dd></dd>
-<dt><a href="#HydrationResult">HydrationResult</a> : <code>Object</code></dt>
-<dd><p>An object containing data about the hydration result,
-  including the HTML string</p>
-</dd>
 </dl>
 
-<a name="hydrateWc"></a>
+<a name="StaticShadowDom"></a>
 
-### hydrateWc(htmlSource, scriptFiles, [userOptions]) ⇒ <code>Promise.&lt;Partial.&lt;HydrationResult&gt;&gt;</code>
+### StaticShadowDom
+Creates a child process used for rendering
 
-Render the shadowRoot of custom elements in an HTML string or [hast
-AST](https://github.com/syntax-tree/hast) to include a [declarative shadow
-DOM](https://github.com/mfreed7/declarative-shadow-dom/blob/master/README.md) `<template>` node
-for use in static site generation (SSG) and server-side rendering (SSR).
+**Kind**: global class  
 
-**Kind**: global function  
-**Returns**: <code>Promise.&lt;Partial.&lt;HydrationResult&gt;&gt;</code> - - A promise resolving to an object with data about
-the hydration result
+* [StaticShadowDom](#StaticShadowDom)
+    * [new StaticShadowDom(options)](#new_StaticShadowDom_new)
+    * [.rendererProcess](#StaticShadowDom+rendererProcess)
+    * [.render(html, scripts, userOptions)](#StaticShadowDom+render) ⇒ <code>Promise.&lt;module:StaticShadowDom~RenderResult&gt;</code>
 
-| Param         | Type                              | Default         | Description                                                         |
-| ------------- | --------------------------------- | --------------- | ------------------------------------------------------------------- |
-| htmlSource    | <code>string</code>               |                 | A string of HTML or hast AST tree                                   |
-| scriptFiles   | <code>Array.&lt;string&gt;</code> |                 | Paths for ES modules defining the web components used in htmlSource |
-| [userOptions] | [<code>Options</code>](#Options)  | <code>{}</code> | Options. Default is `{}`                                            |
+<a name="new_StaticShadowDom_new"></a>
+
+#### new StaticShadowDom(options)
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>module:StaticShadowDom~Options</code> | Options |
+
+<a name="StaticShadowDom+rendererProcess"></a>
+
+#### staticShadowDom.rendererProcess
+The Node `child_process` used for rendering.
+
+**Kind**: instance property of [<code>StaticShadowDom</code>](#StaticShadowDom)  
+<a name="StaticShadowDom+render"></a>
+
+#### staticShadowDom.render(html, scripts, userOptions) ⇒ <code>Promise.&lt;module:StaticShadowDom~RenderResult&gt;</code>
+Render the ShadowDOM
+
+**Kind**: instance method of [<code>StaticShadowDom</code>](#StaticShadowDom)  
+**Returns**: <code>Promise.&lt;module:StaticShadowDom~RenderResult&gt;</code> - - Render result  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| html | <code>string</code> | Html string |
+| scripts | <code>Array.&lt;string&gt;</code> | Array of scripts |
+| userOptions | <code>module:StaticShadowDom~Options</code> | Options |
+
+<a name="Options"></a>
+
+### Options : <code>Object</code>
+[StaticShadowDom#render()](#StaticShadowDom+render) options
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| cwd | <code>string</code> | Current working directory from which provided script paths should be resolved |
+| cleanup | <code>boolean</code> | Whether to automatically clean the renderer child process |
+| containerElId | <code>string</code> | The ID of the container DOM element used for rendering the   HTML fragment |
+
+<a name="RenderResult"></a>
+
+### RenderResult : <code>Object</code>
+An object containing data about the hydration result, including
+  the HTML string
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| html | <code>string</code> | The transformed HTML fragment, as string |
 
 <a name="JSDOM"></a>
 
 ### JSDOM : <code>module:jsdom~JSDOM</code>
-
 **Kind**: global typedef  
-<a name="Options"></a>
-
-### Options : <code>Object</code>
-
-[hydrateWc()](#hydrateWc) options
-
-**Kind**: global typedef  
-**Properties**
-
-| Name          | Type                 | Description                                                                                          |
-| ------------- | -------------------- | ---------------------------------------------------------------------------------------------------- |
-| cwd           | <code>string</code>  | Current working directory from which provided script paths should be resolved                        |
-| cleanupDom    | <code>boolean</code> | Whether to automatically clean up browser globals copied to the current Node process `global` object |
-| containerElId | <code>string</code>  | The ID of the container DOM element used for rendering the HTML fragment                             |
-
 <a name="cleanup"></a>
 
 ### cleanup ⇒ <code>void</code>
-
 **Kind**: global typedef  
-<a name="HydrationResult"></a>
-
-### HydrationResult : <code>Object</code>
-
-An object containing data about the hydration result,
-including the HTML string
-
-**Kind**: global typedef  
-**Properties**
-
-| Name    | Type                             | Description                                                     |
-| ------- | -------------------------------- | --------------------------------------------------------------- |
-| dom     | <code>JSON</code>                | The jsdom.JSDOM instance used for transformation                |
-| html    | <code>string</code>              | The transformed HTML fragment, as string                        |
-| cleanup | [<code>cleanup</code>](#cleanup) | A function to remove jsdom browser globals from Node's `global` |
 
 <!-- /api -->
 

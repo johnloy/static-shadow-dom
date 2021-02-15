@@ -1,0 +1,5 @@
+{
+  "imports": {
+    "mapped-module": "./i-am-mapped.js"
+  }
+}
