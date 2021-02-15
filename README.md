@@ -8,6 +8,28 @@ Learn more about Declarative Shadow DOM:
 - [Explainer](https://github.com/mfreed7/declarative-shadow-dom/blob/master/README.md)
 - [WhatWG discussion](https://github.com/whatwg/dom/issues/831)
 
+:question: Why would you want to do this?
+
+- **SEO**: A major reason to use SSG and SSR is to provide indexable text in HTML documents. Statically rendering shadow roots can expose text normally only present in the DOM after JS initializes.
+
+- **Reduce FOUC:** In conjunction with inlined critical styles, declarative shadow DOM enables (nearly) immediately rendering a styled shadow DOM. Without this, slow-loading scripts/modules defining custom elements can delay paints with full styling. 
+
+- **Improve Cumulative Layout Shift:**
+
+:information_source: Declarative Shadow DOM requires a polyfill!
+
+While you can currently enable declarative shadow DOM in Chrome by enabling it using an [experimental web platform feature flag](https://web.dev/declarative-shadow-dom/#detection-support), you'll most likely want to include a polyfill in the HTML of all pages using declarative shadow DOM.
+
+```javascript
+// Place before the closing </body> tag
+document.querySelectorAll('template[shadowroot]').forEach(template => {
+  const mode = template.getAttribute('shadowroot');
+  const shadowRoot = template.parentNode.attachShadow({ mode });
+  shadowRoot.appendChild(template.content);
+  template.remove();
+});
+```
+
 ## Examples
 
 ```javascript
