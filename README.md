@@ -231,4 +231,8 @@ An object containing data about the hydration result, including
 
 ## Authors
 
+- [John Loy][author]
+
 ## License
+
+[MIT][license] © [John Loy][author]
