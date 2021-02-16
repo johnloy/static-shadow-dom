@@ -76,12 +76,19 @@ const scripts = ['./src/components/my-component.js']
     // jsdom.JSDOM object
     dom,
   } = await renderer.render(htmlStr, scripts, {
-    // Example: /Users/me/projects/my-website
+    // Set the current working directory for resolving:
+    // - scripts paths
+    // - relative paths in the import-map, if present
     cwd: process.cwd(),
 
-    // Keep the renderer child process and its jsdom alive
-    // for subsequent renders.
-    cleanupDom: false,
+    // Use an import map
+    importMap: true,
+
+    // Get back the hast AST tree for further use, if desired
+    returnAst: true,
+
+    // Format the html string using Prettier
+    prettify: true,
   })
 
   console.log(html)
@@ -114,12 +121,6 @@ const scripts = ['./src/components/my-component.js']
 ```sh
 npm i -D @johnloy/static-shadow-dom
 ```
-
-## Usage
-
-### Use with LitElement
-
-### Reuse the jsdom.JSDOM instance for rendering multiple inputs
 
 ## API
 
