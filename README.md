@@ -8,15 +8,15 @@ Learn more about Declarative Shadow DOM:
 - [Explainer](https://github.com/mfreed7/declarative-shadow-dom/blob/master/README.md)
 - [WhatWG discussion](https://github.com/whatwg/dom/issues/831)
 
-:question: Why would you want to do this?
+### :question: Why would you want to do this?
 
 - **SEO**: A major reason to use SSG and SSR is to provide indexable text in HTML documents. Statically rendering shadow roots can expose text normally only present in the DOM after JS initializes.
 
-- **Reduce FOUC:** In conjunction with inlined critical styles, declarative shadow DOM enables (nearly) immediately rendering a styled shadow DOM. Without this, slow-loading scripts/modules defining custom elements can delay paints with full styling. 
+- **Avoid FOUC:** In conjunction with inlined critical styles, declarative shadow DOM enables nearly-immediate rendering of a styled shadow DOM. Without this, slow-loading scripts/modules defining custom elements can delay paints producing final styling. 
 
-- **Improve Cumulative Layout Shift:**
+- **Minimize Cumulative Layout Shift:** One of the new [Web Vitals](https://web.dev/vitals/) user-centric metrics promoted by Google, [Cumulative Layout Shift (CLS)](https://web.dev/cls/) _"...helps quantify how often users experience unexpected layout shifts"_, such as those that might occur because styles are applied after initial page load, causing visual elements to move around (e.g. clickable things). Improving CLS, by the way, has potential to in turn [help with SEO ranking](https://www.searchenginejournal.com/cumulative-layout-shift/) too.
 
-:information_source: Declarative Shadow DOM requires a polyfill!
+### :information_source: Declarative Shadow DOM requires a polyfill!
 
 While you can currently enable declarative shadow DOM in Chrome by enabling it using an [experimental web platform feature flag](https://web.dev/declarative-shadow-dom/#detection-support), you'll most likely want to include a polyfill in the HTML of all pages using declarative shadow DOM.
 
