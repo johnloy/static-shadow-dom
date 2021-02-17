@@ -7,7 +7,7 @@ class NestedComponentElement extends LitElement {
   }
 
   render() {
-    return html` <p>This is nested!</p> `
+    return html`<p>This is nested!</p>`
   }
 }
 

@@ -35,6 +35,8 @@ const scripts = ['./components/web-component.js', './components/nested-component
     returnAst: true,
 
     prettify: true,
+
+    nestedElements: true,
   })
 
   const { html: htmlResult1, ast } = await staticShadowDom.render(htmlFragmentStr1, scripts, {

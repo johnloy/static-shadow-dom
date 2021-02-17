@@ -11,7 +11,9 @@ class WebComponentElement extends LitElement {
     return html`
       <slot></slot>
       <div>
-        <nested-component>${iAmMappedMsg}</nested-component>
+        <nested-component>
+          <p>${iAmMappedMsg}</p>
+        </nested-component>
         <p>${this.getAttribute('foo')}!</p>
       </div>
     `
