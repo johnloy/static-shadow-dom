@@ -16,6 +16,12 @@ Learn more about Declarative Shadow DOM:
 
 - **Minimize Cumulative Layout Shift:** One of the new [Web Vitals](https://web.dev/vitals/) user-centric metrics promoted by Google, [Cumulative Layout Shift (CLS)](https://web.dev/cls/) _"...helps quantify how often users experience unexpected layout shifts"_, such as those that might occur because styles are applied after initial page load, causing visual elements to move around (e.g. clickable things). Improving CLS, by the way, has potential to in turn [help with SEO ranking](https://www.searchenginejournal.com/cumulative-layout-shift/) too.
 
+### 🚨 Not ready for production!
+
+This package is a work in progress, and has not yet been robustly tested for the large variety of scenarios possible when mixing html-inlined scripts, external scripts, and external ES modules. Use at your own risk.
+
+Also, before using, be sure to read about [caveats](#caveats).
+
 ### :information_source: Declarative Shadow DOM requires a polyfill!
 
 While you can currently enable declarative shadow DOM in Chrome by enabling it using an [experimental web platform feature flag](https://web.dev/declarative-shadow-dom/#detection-support), you'll most likely want to include a polyfill in the HTML of all pages using declarative shadow DOM.
@@ -206,6 +212,12 @@ the HTML string
 **Kind**: global typedef
 
 <!-- /api -->
+
+## Caveats
+
+- In order for ES module imports to work correctly for packages, you (currently) need to either use bare module specifiers and locally install the packages using npm/yarn or use relative url specifiers like `../node_modules/lit-element/lit-element.js` (`.js` extension required)
+- YMMV when supplying HTML with a complicated mixture of html-inlined scripts, external scripts, and external ES modules
+- This tool depends on [Node.js >= 13 ESM loader hooks](https://nodejs.org/api/esm.html#esm_loaders), which are currently experimental
 
 ## Contributing
 
