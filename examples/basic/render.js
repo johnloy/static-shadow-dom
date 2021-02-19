@@ -39,7 +39,7 @@ const scripts = ['./components/web-component.js', './components/nested-component
     nestedElements: true,
   })
 
-  const { html: htmlResult1, ast } = await staticShadowDom.render(htmlFragmentStr1, scripts, {
+  const { html: htmlResult1 } = await staticShadowDom.render(htmlFragmentStr1, scripts, {
     // Keep the renderer child process alive for subsequent renders
     cleanup: false,
   })

@@ -1,6 +1,6 @@
 {
   "name": "@johnloy/static-shadow-dom",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "Render the declarative shadow DOM to custom elements in a fragment of HTML",
   "license": "MIT",
   "main": "index.js",
@@ -11,21 +11,21 @@
     }
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=13"
   },
   "scripts": {
+    "build:docs": "jsdoc2md -c jsdoc.config.js -d 3 lib/**.js | node ./scripts/inject-api-docs.js",
+    "echo": "echo $1",
     "format": "run-s format:*",
     "format:eslint": "eslint --ext .js,.html,.md . --fix",
     "format:prettier": "prettier \"**/*.{js,html,md}\" \"**/package.json\" --write",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint --ext .js,.html,.md .",
     "lint:prettier": "prettier \"**/*.{js,html,md}\" \"**/package.json\" --check",
-    "build:docs": "jsdoc2md -c jsdoc.config.js -d 3 lib/**.js | node ./scripts/inject-api-docs.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "echo": "echo $1"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@node-loader/core": "johnloy/node-loader-core#bugfix/config-env-var-path",
+    "@node-loader/core": "^1.0.4",
     "@node-loader/import-maps": "^1.0.3",
     "@rollup/plugin-node-resolve": "^11.1.1",
     "app-root-path": "^3.0.0",
