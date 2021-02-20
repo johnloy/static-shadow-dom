@@ -6,6 +6,7 @@ In other words...
 
 <details>
   <summary>...HTML like this...</summary>
+  
   ```html
   <my-tabs>
     <my-tab
@@ -28,71 +29,74 @@ In other words...
       aria-labelledby="tab-3"><p>Tab panel 3</p></my-tab-panel>
   </my-tabs>
   ```
+  
 </details>
 
 <details>
-    <summary>...will be transformed to something like this:</summary>
-    ```html
-    <my-tabs>
-      <my-tab id="tab-1" aria-controls="tab-panel-1">
-        <template shadowroot="open">
-          <button
-            role="tab"
-            aria-selected="false"
-            tabindex="-1"><slot></slot></button>
-        </template>
-        Tab 1
-      </my-tab>
-      <my-tab id="tab-2" aria-controls="tab-panel-2">
-        <template shadowroot="open">
-          <button
-            role="tab"
-            aria-selected="true"
-            tabindex="0"><slot></slot></button>
-        </template>
-        Tab 2
-      </my-tab>
-      <my-tab id="tab-3" aria-controls="tab-panel-3">
-        <template shadowroot="open">
-          <button
-            role="tab"
-            aria-selected="false"
-            tabindex="-1"><slot></slot></button>
-        </template>
-        Tab 3
-      </my-tab>
-      <my-tab-panel
-        id="tab-panel-1"
-        aria-labelledby="tab-1">
-        <template shadowroot="open">
-          <div role="tabpanel" aria-selected="false">
-            <slot></slot>
-          </div>
-        </template>
-        <p>Tab panel 1</p>
-      </my-tab-panel>
-      <my-tab-panel
-        id="tab-panel-2"
-        aria-labelledby="tab-2" active>
-        <template shadowroot="open">
-          <div role="tabpanel" aria-selected="true">
-            <slot></slot>
-          </div>
-        </template>
-        <p>Tab panel 2</p>
-      </my-tab-panel>
-      <my-tab-panel
-        id="tab-panel-3"
-        aria-labelledby="tab-3">
-        <template shadowroot="open">
-          <div role="tabpanel" aria-selected="false">
-            <slot></slot>
-          </div>
-        </template>
-        <p>Tab panel 3</p>
-      </my-tab-panel>
-    </my-tabs>
-    ```
+  <summary>...will be transformed to something like this:</summary>
+
+  ```html
+  <my-tabs>
+    <my-tab id="tab-1" aria-controls="tab-panel-1">
+      <template shadowroot="open">
+        <button
+          role="tab"
+          aria-selected="false"
+          tabindex="-1"><slot></slot></button>
+      </template>
+      Tab 1
+    </my-tab>
+    <my-tab id="tab-2" aria-controls="tab-panel-2">
+      <template shadowroot="open">
+        <button
+          role="tab"
+          aria-selected="true"
+          tabindex="0"><slot></slot></button>
+      </template>
+      Tab 2
+    </my-tab>
+    <my-tab id="tab-3" aria-controls="tab-panel-3">
+      <template shadowroot="open">
+        <button
+          role="tab"
+          aria-selected="false"
+          tabindex="-1"><slot></slot></button>
+      </template>
+      Tab 3
+    </my-tab>
+    <my-tab-panel
+      id="tab-panel-1"
+      aria-labelledby="tab-1">
+      <template shadowroot="open">
+        <div role="tabpanel" aria-selected="false">
+          <slot></slot>
+        </div>
+      </template>
+      <p>Tab panel 1</p>
+    </my-tab-panel>
+    <my-tab-panel
+      id="tab-panel-2"
+      aria-labelledby="tab-2" active>
+      <template shadowroot="open">
+        <div role="tabpanel" aria-selected="true">
+          <slot></slot>
+        </div>
+      </template>
+      <p>Tab panel 2</p>
+    </my-tab-panel>
+    <my-tab-panel
+      id="tab-panel-3"
+      aria-labelledby="tab-3">
+      <template shadowroot="open">
+        <div role="tabpanel" aria-selected="false">
+          <slot></slot>
+        </div>
+      </template>
+      <p>Tab panel 3</p>
+    </my-tab-panel>
+  </my-tabs>
+  ```
+    
 </details>
 
 
