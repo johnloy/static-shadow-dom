@@ -1,6 +1,13 @@
 # static-shadow-dom
+### 🚨 Not ready for production!
 
-Transform custom elements in an HTML string or [hast AST](https://github.com/syntax-tree/hast) (if you already have the AST) to include a [declarative shadow DOM](https://github.com/mfreed7/declarative-shadow-dom/blob/master/README.md) `<template>` first child node, for custom element hydration when using static site generation (SSG) and server-side rendering (SSR).
+This package is a work in progress, and has not yet been robustly tested for the large variety of scenarios possible when mixing html-inlined scripts, external scripts, and external ES modules. Use at your own risk.
+
+Also, before using, be sure to read about [caveats](#caveats).
+
+---
+
+Transform custom elements in an HTML string or [hast AST](https://github.com/syntax-tree/hast) (if you already have the AST) to include a [declarative shadow DOM](https://github.com/mfreed7/declarative-shadow-dom/blob/master/README.md) (DSD) `<template>` first child node, for custom element hydration when using static site generation (SSG) and server-side rendering (SSR).
 
 In other words...
 
@@ -108,20 +115,42 @@ Learn more about Declarative Shadow DOM:
 
 ### :question: Why would you want to do this?
 
-- **Avoid FOUC:** In conjunction with inlined critical styles, declarative shadow DOM enables nearly-immediate rendering of a styled shadow DOM. Without this, slow-loading scripts/modules defining custom elements can delay paints producing final styling.
+- **Avoid [FOUC](https://en.wikipedia.org/wiki/Flash_of_unstyled_content):** In conjunction with inlined critical styles, declarative shadow DOM enables nearly-immediate rendering of a styled shadow DOM. Without this, slow-loading scripts/modules defining custom elements can delay paints producing final styling.
 
 - **SEO**: A major reason to use SSG and SSR is to provide indexable text in HTML documents. Statically rendering shadow roots can expose text normally only present in the DOM after JS initializes.
 
 - **Minimize Cumulative Layout Shift:** One of the new [Web Vitals](https://web.dev/vitals/) user-centric metrics promoted by Google, [Cumulative Layout Shift (CLS)](https://web.dev/cls/) _"...helps quantify how often users experience unexpected layout shifts"_, such as those that might occur because styles are applied after initial page load, causing visual elements to move around (e.g. clickable things). Improving CLS, by the way, has potential to in turn [help with SEO ranking](https://www.searchenginejournal.com/cumulative-layout-shift/) too.
 
-### 🚨 Not ready for production!
+---
 
-This package is a work in progress, and has not yet been robustly tested for the large variety of scenarios possible when mixing html-inlined scripts, external scripts, and external ES modules. Use at your own risk.
+## Contents
 
-Also, before using, be sure to read about [caveats](#caveats).
+  - [Install](#install)
+  - [Usage](#usage)
+    - [Basic](#basic)
+    - [Designating elements for static rendering](#designating-elements-for-static-rendering)
+    - [Explictly specifying the DSD HTML content](#explictly-specifying-the-dsd-html-content)
+    - [Controlling when the shadow DOM is considered rendered](#controlling-when-the-shadow-dom-is-considered-rendered)
+    - [Use with LitElement](#use-with-litelement)
+    - [Use with an import map](#use-with-an-import-map)
+    - [Reuse the renderer child process for multiple renders](#reuse-the-renderer-child-process-for-multiple-renders)
+  - [API](#api)
+  - [Caveats](#caveats)
+  - [Contributing](#contributing)
+  - [Authors](#authors)
+  - [License](#license)
 
+---
 
-## Examples
+## Install
+
+```sh
+npm i -D @johnloy/static-shadow-dom
+```
+
+## Usage 
+
+### Basic
 
 ```javascript
 // my-component.js
@@ -142,6 +171,7 @@ class MyComponentElement extends HTMLElement {
 
 customElements.define('my-component', MyComponentElement)
 ```
+
 
 ```javascript
 // A node esm module (cjs also supported) in your build script...
@@ -205,11 +235,30 @@ const scripts = ['./src/components/my-component.js']
 })()
 ```
 
-## Install
+### Designating elements for static rendering
 
-```sh
-npm i -D @johnloy/static-shadow-dom
+Rendering a declarative shadow DOM doesn't necessarily make sense for every custom element. For example, the light DOM of some custom elements might suffice for the purposes of critical styles for first paint and SEO. Some custom elements might also not even have a visual aspect.
+
+Consequently, you will need to explicitly opt into static rendering of the DSD.
+
+By default, any custom element in the provided HTML source having a `static` boolean attribute will be transformed to include the DSD. This applies as well to custom elements nested in the shadow DOM of top-level `static` elements, and recursively down through DOM descendants.
+
+In cases where an attribute named `static` is already used by a custom element and would conflict with `static-shadow-dom`, you can specificy alternative attribute names in [render options](#options).
+
+```html
+<not-rendered></not-rendered>
+<is-rendered static></is-rendered>
 ```
+
+### Explictly specifying the DSD HTML content
+
+### Controlling when the shadow DOM is considered rendered
+
+### Use with LitElement
+
+### Use with an import map
+
+### Reuse the renderer child process for multiple renders
 
 ## API
 
@@ -217,84 +266,128 @@ npm i -D @johnloy/static-shadow-dom
 
 <a name="StaticShadowDom"></a>
 
-#### `new StaticShadowDom(options)`
+### `new StaticShadowDom(options) ⇒ staticShadowDom`
 
-Creates a child process used for rendering
+Spawn a renderer [child process](https://nodejs.org/api/child_process.html), available at [`StaticShadowDom.rendererProcess`](#staticshadowdom_rendererprocess). Throughout its lifetime, across potentially multiple calls to `staticShadowDom.render()`, it will create and re-use a single [jsdom.JSDOM](https://github.com/jsdom/jsdom#customizing-jsdom) instance.
 
-**Kind**: global class
+**Arguments**
 
-- [StaticShadowDom](#StaticShadowDom)
-  - [new StaticShadowDom(options)](#new_StaticShadowDom_new)
-  - [.rendererProcess](#StaticShadowDom+rendererProcess)
-  - [.render(html, scripts, userOptions)](#StaticShadowDom+render) ⇒ <code>Promise.&lt;module:StaticShadowDom~RenderResult&gt;</code>
+- `options` — Default options to use for subsequent calls to `render()`. These same options can be specified à la carte when calling `render()` to override defaults.
 
-<a name="new_StaticShadowDom_new"></a>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>cwd</th>
+        <td><pre>string</pre></td>
+        <td>Current working directory from which provided script paths should be resolved. Also used as the current location of the import map, if used, for resolving relative paths within.</td>
+        <td>
+        <a href="https://nodejs.org/api/process.html#process_process_cwd"><pre language="javascript">process.cwd()</pre></a>
+        </td>
+      </tr>
+      <tr>
+        <th>importMap</th>
+        <td><pre>boolean|string</pre></td>
+        <td>The `id` attribute to use for the root jsdom element inside of which rendering occurs. In most cases, the default shouldn't conflict with elements in source HTML for rendering, but overriding.</td>
+        <td>`false`</td>
+      </tr>
+      <tr>
+        <td colspan="4">...[render options](#options)</td>
+      </tr>
+    </tbody>
+  </table>
 
-| Param   | Type                                        | Description |
-| ------- | ------------------------------------------- | ----------- |
-| options | <code>module:StaticShadowDom~Options</code> | Options     |
+---
 
-<a name="StaticShadowDom+rendererProcess"></a>
+### staticShadowDom.render(<br>&nbsp;&nbsp;&nbsp;&nbsp;html: string,<br>&nbsp;&nbsp;&nbsp;&nbsp;scripts: string[],<br>&nbsp;&nbsp;&nbsp;&nbsp;options: object<br>) ⇒ `Promise<RenderResult>`
 
-#### staticShadowDom.rendererProcess
+Transform the given `html` source to include declarative shadow DOM `<template>` first child nodes in each custom element tag to be statically rendered. 
 
-The Node `child_process` used for rendering.
+The `.innerHTML`/`.content` of that node will by default match the content of the `shadowRoot` DocumentFragment at the time of the next execution of the event loop (aka next task) following the host element's connection to the DOM. This allows sufficient time for synchronous manipulations of `shadowRoot` contents using the `connectedCallback()` element lifecycle method.
 
-**Kind**: instance property of [<code>StaticShadowDom</code>](#StaticShadowDom)  
-<a name="StaticShadowDom+render"></a>
+If an element to be rendered extends LitElement, or simply has an `updateComplete` property returning a promise, then that promise is awaited before the `shadowRoot` contents are read and injected into the declarative shadow DOM `<template>`.
 
-#### staticShadowDom.render(html, scripts, userOptions) ⇒ <code>Promise.&lt;module:StaticShadowDom~RenderResult&gt;</code>
+**Arguments**
 
-Render the ShadowDOM
+- `html` — Default options to use for subsequent calls to `render()`. These same options can be specified à la carte when calling `render()` to override defaults.
 
-**Kind**: instance method of [<code>StaticShadowDom</code>](#StaticShadowDom)  
-**Returns**: <code>Promise.&lt;module:StaticShadowDom~RenderResult&gt;</code> - - Render result
+- `scripts` — Default options to use for subsequent calls to `render()`. These same options can be specified à la carte when calling `render()` to override defaults.
 
-| Param       | Type                                        | Description      |
-| ----------- | ------------------------------------------- | ---------------- |
-| html        | <code>string</code>                         | Html string      |
-| scripts     | <code>Array.&lt;string&gt;</code>           | Array of scripts |
-| userOptions | <code>module:StaticShadowDom~Options</code> | Options          |
+- <a name="options"></a>`options` — Rendering options.
 
-<a name="Options"></a>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>cleanup</th>
+        <td><pre>boolean</pre></td>
+        <td>The `id` attribute to use for the root jsdom element inside of which rendering occurs. In most cases, the default shouldn't conflict with elements in source HTML for rendering, but overriding.</td>
+        <td>`true`</td>
+      </tr>
+      <tr>
+        <th>renderBoolAttribute</th>
+        <td><pre>string|string[]</pre></td>
+        <td>The `id` attribute to use for the root jsdom element inside of which rendering occurs. In most cases, the default shouldn't conflict with elements in source HTML for rendering, but overriding.</td>
+        <td>`static`</td>
+      </tr>
+      <tr>
+        <th>returnAst</th>
+        <td><pre>boolean</pre></td>
+        <td>The `id` attribute to use for the root jsdom element inside of which rendering occurs. In most cases, the default shouldn't conflict with elements in source HTML for rendering, but overriding.</td>
+        <td>`false`</td>
+      </tr>
+      <tr>
+        <th>returnStats</th>
+        <td><pre>boolean</pre></td>
+        <td>The `id` attribute to use for the root jsdom element inside of which rendering occurs. In most cases, the default shouldn't conflict with elements in source HTML for rendering, but overriding.</td>
+        <td>`false`</td>
+      </tr>
+      <tr>
+        <th>prettify</th>
+        <td><pre>boolean|PrettierConfig</pre></td>
+        <td>The `id` attribute to use for the root jsdom element inside of which rendering occurs. In most cases, the default shouldn't conflict with elements in source HTML for rendering, but overriding.</td>
+        <td><pre language="javascript">ssd-container</pre></td>
+      </tr>
+    </tbody>
+  </table>
 
-### Options : <code>Object</code>
-
-[StaticShadowDom#render()](#StaticShadowDom+render) options
-
-**Kind**: global typedef  
-**Properties**
-
-| Name          | Type                 | Description                                                                   |
-| ------------- | -------------------- | ----------------------------------------------------------------------------- |
-| cwd           | <code>string</code>  | Current working directory from which provided script paths should be resolved |
-| cleanup       | <code>boolean</code> | Whether to automatically clean the renderer child process                     |
-| containerElId | <code>string</code>  | The ID of the container DOM element used for rendering the HTML fragment      |
 
 <a name="RenderResult"></a>
 
-### RenderResult : <code>Object</code>
+#### RenderResult : `Object`
 
-An object containing data about the hydration result, including
-the HTML string
+An object containing data about the render result, most importantly the HTML and critical CSS strings.
 
-**Kind**: global typedef  
 **Properties**
 
 | Name | Type                | Description                              |
 | ---- | ------------------- | ---------------------------------------- |
 | html | <code>string</code> | The transformed HTML fragment, as string |
 
-<a name="JSDOM"></a>
+---
 
-### JSDOM : <code>module:jsdom~JSDOM</code>
+<a name="staticshadowdom_rendererprocess"></a>
 
-**Kind**: global typedef  
-<a name="cleanup"></a>
+### staticShadowDom.rendererProcess
 
-### cleanup ⇒ <code>void</code>
+The forked Node [child process](https://nodejs.org/api/child_process.html) used for rendering.
 
-**Kind**: global typedef
+---
+
 
 <!-- /api -->
 
