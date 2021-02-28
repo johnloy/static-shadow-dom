@@ -562,7 +562,7 @@ Spawn a renderer [child process](https://nodejs.org/api/child_process.html), ava
     </tbody>
   </table>
 
----
+___
 
 ### staticShadowDom.render(<br>&nbsp;&nbsp;&nbsp;&nbsp;html: string,<br>&nbsp;&nbsp;&nbsp;&nbsp;scripts: string[],<br>&nbsp;&nbsp;&nbsp;&nbsp;options: object<br>) ⇒ `Promise<RenderResult>`
 
@@ -654,7 +654,7 @@ An object containing data about the render result, most importantly the HTML and
 | html | <code>string</code> | The transformed HTML fragment, as string |
 
 
----
+___
 
 ### staticShadowDom.rendererProcess
 
