@@ -244,7 +244,8 @@ const scripts = ['./src/components/my-component.js']
   In cases where an attribute named `static` or `ssr` is already used by a custom element and would conflict with `static-shadow-dom`, you can specificy alternative attribute names via the `optInAttribute` [render option](#options).
 
   ```html
-  <not-rendered></not-rendered> <is-rendered static></is-rendered>
+  <not-rendered></not-rendered>
+  <is-rendered static></is-rendered>
   ```
 
   Additionally, you can supply a list of custom element names, via the `elements` [render option](#options), whose DSD should be rendered. This might be useful in cases where you don't directly control the definition of the custom element.
