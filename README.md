@@ -555,7 +555,7 @@ Spawn a renderer [child process](https://nodejs.org/api/child_process.html), ava
         <td>`false`</td>
       </tr>
       <tr>
-        <td colspan="4">...[render options](#options)</td>
+        <td colspan="4">...<a href="#options">render options</a></td>
       </tr>
     </tbody>
   </table>
