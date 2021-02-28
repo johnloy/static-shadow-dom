@@ -516,6 +516,8 @@ WIP
 
 WIP
 
+**********
+
 ## API
 
 <!-- api -->
@@ -651,17 +653,16 @@ An object containing data about the render result, most importantly the HTML and
 | ---- | ------------------- | ---------------------------------------- |
 | html | <code>string</code> | The transformed HTML fragment, as string |
 
----
 
-<a name="staticshadowdom_rendererprocess"></a>
+---
 
 ### staticShadowDom.rendererProcess
 
 The forked Node [child process](https://nodejs.org/api/child_process.html) used for rendering.
 
----
-
 <!-- /api -->
+
+**********
 
 ## Caveats
 
