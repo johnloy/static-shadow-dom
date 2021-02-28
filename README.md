@@ -119,33 +119,23 @@ Learn more about Declarative Shadow DOM:
 
 ## Contents
 
-- [static-shadow-dom](#static-shadow-dom)
-    - [🚨 Not ready for production!](#-not-ready-for-production)
-    - [:question: Why would you want to do this?](#question-why-would-you-want-to-do-this)
-    - [Features](#features)
-  - [Contents](#contents)
-  - [Install](#install)
-  - [Usage](#usage)
-    - [Basic](#basic)
-    - [Designating elements for static rendering](#designating-elements-for-static-rendering)
-    - [Explictly specifying the DSD HTML content](#explictly-specifying-the-dsd-html-content)
-    - [Controlling when the DSD HTML is considered ready](#controlling-when-the-dsd-html-is-considered-ready)
-    - [Use with LitElement](#use-with-litelement)
-    - [Setting properties on rendered custom elements](#setting-properties-on-rendered-custom-elements)
-    - [Extract critical styles](#extract-critical-styles)
-    - [Use with an import map](#use-with-an-import-map)
-    - [Reuse the renderer child process for multiple renders](#reuse-the-renderer-child-process-for-multiple-renders)
-  - [API](#api)
-    - [`new StaticShadowDom(options) ⇒ staticShadowDom`](#new-staticshadowdomoptions--staticshadowdom)
-    - [staticShadowDom.render(<br>&nbsp;&nbsp;&nbsp;&nbsp;html: string,<br>&nbsp;&nbsp;&nbsp;&nbsp;scripts: string[],<br>&nbsp;&nbsp;&nbsp;&nbsp;options: object<br>) ⇒ `Promise<RenderResult>`](#staticshadowdomrenderhtml-stringscripts-stringoptions-object--promiserenderresult)
-      - [RenderResult : `Object`](#renderresult--object)
-    - [staticShadowDom.rendererProcess](#staticshadowdomrendererprocess)
-  - [Caveats](#caveats)
-    - [:information_source: Declarative Shadow DOM requires a polyfill!](#information_source-declarative-shadow-dom-requires-a-polyfill)
-  - [Ideas for the future…](#ideas-for-the-future)
-  - [Contributing](#contributing)
-  - [Authors](#authors)
-  - [License](#license)
+- [Install](#install)
+- [Usage](#usage)
+  - [Basic](#basic)
+  - [Designating elements for static rendering](#designating-elements-for-static-rendering)
+  - [Explictly specifying the DSD HTML content](#explictly-specifying-the-dsd-html-content)
+  - [Controlling when the DSD HTML is considered ready](#controlling-when-the-dsd-html-is-considered-ready)
+  - [Use with LitElement](#use-with-litelement)
+  - [Setting properties on rendered custom elements](#setting-properties-on-rendered-custom-elements)
+  - [Extract critical styles](#extract-critical-styles)
+  - [Use with an import map](#use-with-an-import-map)
+  - [Reuse the renderer child process for multiple renders](#reuse-the-renderer-child-process-for-multiple-renders)
+- [API](#api)
+- [Caveats](#caveats)
+- [Ideas for the future…](#ideas-for-the-future)
+- [Contributing](#contributing)
+- [Authors](#authors)
+- [License](#license)
 
 ---
 
@@ -276,6 +266,7 @@ const scripts = ['./src/components/my-component.js']
 
 <details>
   <summary>Details</summary>
+  
   In some cases, a complex loading skeleton for example, you might want the DSD to render a UI distinct enough from the normal UI produced by the shadow DOM that it makes sense to supply the DSD HTML separately. To do this, define a `renderStatic` static method on the custom element class. The string returned from this will be directly used as the `innerHTML` of the DSD `<template>` for the element.
 
   ```javascript
@@ -330,6 +321,7 @@ const scripts = ['./src/components/my-component.js']
 
 <details>
   <summary>Details</summary>
+  
   By default, the `shadowRoot.innerHTML` or optional `renderStatic()` string is read and used as the DSD contents for a given custom element instance inside a microtask at the beginning of the next turn of the event loop, aka the next "task", following element connection to the DOM. This is to generally align with the render scheduling strategy used by LitElement. In other words, a bit of time is allowed for the `shadowRoot` to be initially populated with a descendant DOM tree.
 
   If an element extends LitElement, it will have an `updateComplete` property holding a Promise which will additionally be awaited before `shadowRoot.innerHTML` is read. This ensures the async work LitElement does to produce the first render fully completes.
@@ -386,6 +378,7 @@ const scripts = ['./src/components/my-component.js']
 
 <details>
   <summary>Details</summary>
+  
   Custom elements extending LitElement render their DSD using `static-shadow-dom` no differently than others, in general, but actually using them in conjunction with DSD in the browser might require special handling.
 
   LitElement 2.0 automatically attaches a shadowRoot to element instances, which can cause a DOMException when DSD is used for LitElement-based elements in browsers without true support for DSD (those needing a polyfill; all except Chrome with a [feature flag enabled](https://web.dev/declarative-shadow-dom/#detection-support)).
