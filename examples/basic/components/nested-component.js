@@ -6,6 +6,10 @@ class NestedComponentElement extends LitElement {
     // this.attachShadow({ mode: 'open' })
   }
 
+  render_ssr() {
+    return `<p>This is nested</p>`
+  }
+
   render() {
     return html`<p>This is nested!</p>`
   }
