@@ -1,45 +1,22 @@
-import { html, LitElement, css } from 'lit-element'
+import './nested-component.js'
 
-const sharedCssResult = css`
-  p {
-    color: blue;
-  }
-`
+class WebComponentElement extends HTMLElement {
+  constructor() {
+    super()
 
-class WebComponentElement extends LitElement {
-  static get criticalStyles() {
-    return [
-      sharedCssResult,
-      css`
-        ::slotted(h1) {
-          color: red;
-        }
-      `,
-    ]
+    this.attachShadow({ mode: 'open' })
+
+    this.updateComplete = new Promise((resolve) => {
+      setTimeout(() => {
+        this.update()
+        resolve()
+      }, 1000)
+    })
   }
 
-  static get styles() {
-    return [
-      sharedCssResult,
-      css`
-        h2 {
-          color: green;
-        }
-      `,
-    ]
-  }
-
-  render() {
-    return html`
-      <style>
-        .foo {
-          color: pink;
-        }
-      </style>
-      <slot></slot>
-      <div>
-        <p>${this.getAttribute('foo')}!</p>
-      </div>
+  update() {
+    this.shadowRoot.innerHTML = `
+      <p>Async update</p>
     `
   }
 }
