@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "allowJs": true,
+    "checkJs": true,
+    "moduleResolution": "node",
+    "alwaysStrict": true,
+    "strictNullChecks": false,
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "outDir": "types",
+    "removeComments": false,
+    "lib": ["ES2019", "DOM"]
+  },
+  "exclude": [
+    "__tests__",
+    "node_modules",
+    "types"
+  ]
+}

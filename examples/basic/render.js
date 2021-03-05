@@ -37,6 +37,16 @@ const scripts = ['./components/web-component.js', './components/nested-component
     prettify: true,
 
     nestedElements: true,
+
+    elements: ['web-component'],
+
+    getElementProperties(el, { ancestorElements, hostElement, previousSiblingElements }) {
+      console.log('el:', el.localName)
+      // console.log('previousSiblingElements:', previousSiblingElements)
+      console.log('ancestors:', ancestorElements)
+      // console.log('hostElement:', hostElement.localName)
+      // console.log('siblingElements', siblingElements)
+    },
   })
 
   const { html: htmlResult1 } = await staticShadowDom.render(htmlFragmentStr1, scripts, {

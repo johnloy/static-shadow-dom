@@ -1,0 +1,23 @@
+{
+  "title": "Page Title",
+  "sections": [
+    {
+      "sectionTitle": "Fruits",
+      "items": [
+        "Apple",
+        "Orange",
+        "Banana",
+        "Kiwi"
+      ]
+    },
+    {
+      "sectionTitle": "Animals",
+      "items": [
+        "Dog",
+        "Cat",
+        "Gerbil",
+        "Bird"
+      ]
+    }
+  ]
+}
