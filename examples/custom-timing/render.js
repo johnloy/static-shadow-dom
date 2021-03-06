@@ -16,7 +16,7 @@ const scripts = ['./components/web-component.js', './components/nested-component
     // - relative paths in the import-map, if present
     cwd: __dirname,
 
-    elements: ['web-component', 'nested-component'],
+    renderElements: ['web-component', 'nested-component'],
 
     prettify: true,
 

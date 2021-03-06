@@ -22,49 +22,43 @@ const htmlFragmentStr2 = `
 const scripts = ['./components/web-component.js', './components/nested-component.js']
 
 ;(async () => {
-  const staticShadowDom = new StaticShadowDom({
-    // Set the current working directory for resolving:
-    // - scripts paths
-    // - relative paths in the import-map, if present
-    cwd: __dirname,
+  try {
+    const staticShadowDom = new StaticShadowDom({
+      // Set the current working directory for resolving:
+      // - scripts paths
+      // - relative paths in the import-map, if present
+      cwd: __dirname,
 
-    // Use an import map
-    importMap: true,
+      // Use an import map
+      importMap: true,
 
-    // Get back the hast AST tree for further use, if desired
-    returnAst: true,
+      // Get back the hast AST tree for further use, if desired
+      returnAst: true,
 
-    prettify: true,
+      prettify: true,
 
-    nestedElements: true,
+      renderElements: ['web-component'],
+    })
 
-    elements: ['web-component'],
+    const { html: htmlResult1 } = await staticShadowDom.render(htmlFragmentStr1, scripts, {
+      // Keep the renderer child process alive for subsequent renders
+      cleanup: false,
+    })
 
-    getElementProperties(el, { ancestorElements, hostElement, previousSiblingElements }) {
-      console.log('el:', el.localName)
-      // console.log('previousSiblingElements:', previousSiblingElements)
-      console.log('ancestors:', ancestorElements)
-      // console.log('hostElement:', hostElement.localName)
-      // console.log('siblingElements', siblingElements)
-    },
-  })
+    console.log('\n', htmlResult1)
 
-  const { html: htmlResult1 } = await staticShadowDom.render(htmlFragmentStr1, scripts, {
-    // Keep the renderer child process alive for subsequent renders
-    cleanup: false,
-  })
+    const { html: htmlResult2 } = await staticShadowDom.render(htmlFragmentStr2, scripts)
 
-  console.log('\n', htmlResult1)
+    console.log('\n---\n\n', htmlResult2)
 
-  const { html: htmlResult2 } = await staticShadowDom.render(htmlFragmentStr2, scripts)
+    const { html: htmlResult3 } = await staticShadowDom.render(htmlFragmentAst, scripts)
 
-  console.log('\n---\n\n', htmlResult2)
+    console.log('\n---\n\n', htmlResult3)
 
-  const { html: htmlResult3 } = await staticShadowDom.render(htmlFragmentAst, scripts)
-
-  console.log('\n---\n\n', htmlResult3)
-
-  // Must explicitly call StaticShadowDom#cleanup if the `cleanup: false` option was used
-  // on the first call to StaticShadowDom#render.
-  staticShadowDom.cleanup()
+    // Must explicitly call StaticShadowDom#cleanup if the `cleanup: false` option was used
+    // on the first call to StaticShadowDom#render.
+    staticShadowDom.cleanup()
+  } catch (error) {
+    console.log(error)
+  }
 })()

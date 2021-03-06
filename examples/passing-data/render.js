@@ -16,7 +16,7 @@ const scripts = ['./components/ssr-page.js', './components/ssr-section.js']
 
     prettify: true,
 
-    elements: ['ssr-page', 'ssr-section'],
+    renderElements: ['ssr-page', 'ssr-section'],
 
     data,
 
